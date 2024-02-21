@@ -161,6 +161,7 @@ if Filtrage:
     df = df[(df["Note"] >= Filtre_note[0]) & (df["Note"] <= Filtre_note[1])]
     #    if Filtre_date:
     df = df[(df["Date"] >= Filtre_date[0]) & (df["Date"] <= Filtre_date[1])]
+    texte = list(df["Commentaire"].dropna())
     st.metric("Nombre de commentaires après filtrage", (~(df["Commentaire"].isna())).sum())
 
 elif Filtrage is None:
@@ -191,12 +192,8 @@ with tab2:
     elif Filtrage is None:
         pass
 
-texte = list(df["Commentaire"].dropna())
+# texte = list(df["Commentaire"].dropna())
 
-if Filtrage:
-    texte = list(df["Commentaire"].dropna())
-elif Filtrage is None:
-    st.write("Veuillez appliquer les filtres aux données.")
 
 st.subheader("Affichage des données filtrées")
 
@@ -363,6 +360,10 @@ with col1:
             user_input = prompts_dictionary[chosen_prompt]
             st.form_submit_button("Appliquer")
 
+# Choix du modèle
+radio_markdown = '''
+[Voir les caractéristiques des modèles](https://platform.openai.com/docs/models/overview)'''.strip()
+
 with col2:
     with st.form("Paramètres du modèle"):
         Temperature = st.slider('Liberté', min_value=0.0, max_value=1.0, value=0.0, step=0.01, help=radio_markdown)
@@ -411,4 +412,3 @@ if user_input and openai_api_key:
     msg = response.choices[0].message
     st.session_state.messages.append(msg)
     message(msg.content)
-
